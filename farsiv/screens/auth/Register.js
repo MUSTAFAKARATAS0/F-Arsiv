@@ -1,17 +1,61 @@
-import { View, Text,StyleSheet, TextInput } from 'react-native'
+import { View, Text,StyleSheet, TextInput, Alert } from 'react-native'
 import React,{useState} from 'react'
 import InputBox from '../../components/Forms/InputBox';
+import SubmitButton from '../../components/Forms/SubmitButton';
 
 const Register = () => {
-  return (
-    <View style ={styles.container}>
-      <Text style ={styles.pageTitle}>Register</Text>
-      <View style={{marginHorizontal:20}}>
-      <InputBox inputTitle={"MAİL"} keyboardType ="email-address" autoComplete="email"/>
-      <InputBox inputTitle={"PASSWORD"} secureTextEntry={true} autoComplete="password" />
-      </View>
+  const [name,setName] = useState('')
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const hendleSubmit= () => {
+    try {
+      setLoading(true)
+      if(!name|| !email || !password){
+      Alert.alert('please fill all fields')
+      setLoading(false)
+      return
+
+      }
+      console.log('register Data ==>', {name, email, password})
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
+
+return (
+  <View style={styles.container}>
+    <Text style={styles.pageTitle}>Register</Text>
+    <View style={{marginHorizontal: 20}}>
+      <InputBox inputTitle={"Name"} value={name} setValue={setName} />
+      <InputBox
+        inputTitle={"Email"}
+        keyboardType="email-address"
+        autoComplete="email"
+        value={email}
+        setValue={setEmail}
+      />
+      <InputBox
+        inputTitle={"Password"}
+        secureTextEntry={true}
+        autoComplete="password"
+        value={password}
+        setValue={setPassword}
+      />
     </View>
-  );
+    {/* <Text>{JSON.stringify({ name, email, password }, null, 4)}</Text> */}
+    <SubmitButton 
+    btnTitle="Register"
+     loading={loading}
+     hendleSubmit={hendleSubmit}
+     />
+  </View>
+);
+
+
 };
 
 const styles =StyleSheet.create({
