@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import InputBox from '../../components/Forms/InputBox';
 import SubmitButton from '../../components/Forms/SubmitButton';
 
-const Register = () => {
+const Register = ({navigation}) => {
   const [name,setName] = useState('')
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
@@ -52,6 +52,14 @@ return (
      loading={loading}
      hendleSubmit={hendleSubmit}
      />
+     <Text style={styles.linkText}>
+      Alredy Register Please{" "}
+      <Text style={styles.link}
+      onPress={() => navigation.navigate('Login')}>
+        
+
+        LOGIN</Text>{" "}
+        </Text>
   </View>
 );
 
@@ -80,7 +88,14 @@ const styles =StyleSheet.create({
         borderRadius:10,
         marginTop:10,
         paddingLeft:10,
-        }
+        },
+    linkText:{
+      textAlign:"center"
+
+    },
+    link:{
+      color:"red"
+    }
     
 })
 
