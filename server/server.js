@@ -3,9 +3,14 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const colors = require('colors')
 const morgan = require('morgan')
+const connectDB = require('./config/db')
 
 //DOTENV
 dotenv.config()
+
+
+//MONGODB CONNECTİON
+connectDB();
 
 //REST OBJECT
 const app = express()
@@ -19,7 +24,7 @@ app.use(morgan('dev'))
 app.get("",(req,res)=>{
     res . status(200) .json({
         success:true,
-        message:"Welcome To Full Stack App"
+        message:"Welcome To Full Stack App asfddagsd"
     });
 });
 
