@@ -1,11 +1,10 @@
-const express = require('express')
-const {registerController} = require("../controllers/userController")
+// userRoutes.js
 
-//riouter object
- const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const { registerController } = require('../controllers/userController');
 
- //routes
-router.post('/register',registerController)
+// Kullanıcı kaydı için POST rotası
+router.post('/register', registerController);
 
-//export
-module.exports=router
+module.exports = router;

@@ -15,7 +15,7 @@ try {
             message:'email is required' 
         })
     }
-    if(!password || password,length<6){
+    if(!password || password.length < 6 ){
         return res.status(400).send({
             success:false,
             message:'password is required 6 character long' 
@@ -24,18 +24,28 @@ try {
     //exisiting user
     const exisitingUser = await userModel.findOne({email})
     if(exisitingUser){
-        ReadableStreamBYOBRequest.res.status(500).send({
+         return res.status(500).send({
             success:false,
             message:'user alredy register with this email'
-        })
+        });
     }
+    //save user
+    const user = await userModel({name,email,password}).save();
 
-
+    res.status(201).send({
+        success:true,
+        message:'registeration successfull please login'
+    });
 
 } catch (error) {
     console.log(error)
+    return res.status(500).send({
+        success:false,
+        message:'error in register api',
+        error,
+    });
 }
 
 };
 
-module.export={registerController};
+module.exports={registerController};
