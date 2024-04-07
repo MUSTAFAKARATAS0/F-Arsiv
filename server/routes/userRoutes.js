@@ -1,10 +1,15 @@
-// userRoutes.js
-
 const express = require('express');
-const router = express.Router();
-const { registerController } = require('../controllers/userController');
+const { registerController, loginController } = require('../controllers/userController');
 
-// Kullanıcı kaydı için POST rotası
+//riouter object 
+const router = express.Router();
+
+// routes   
+//REGISTER || POST
 router.post('/register', registerController);
 
+//LOGIN || POST
+router.post('/login', loginController)
+
+//export
 module.exports = router;
