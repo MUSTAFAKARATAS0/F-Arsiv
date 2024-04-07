@@ -21,12 +21,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 //ROUTES
-app.get("",(req,res)=>{
-    res . status(200) .json({
-        success:true,
-        message:"Welcome To Full Stack App asfddagsd"
-    });
-});
+app.use("/api/v1/auth", require("./routes/userRoutes"))
 
 
 //PORT
