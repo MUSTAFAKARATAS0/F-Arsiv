@@ -1,3 +1,5 @@
+const { hash } = require('bcrypt');
+const { hashPassword } = require('../helpers/authHelper');
 const userModel=require('../models/userModel')
 const registerController = async (req,res) => {
 try {
@@ -29,8 +31,11 @@ try {
             message:'user alredy register with this email'
         });
     }
+    //hashed password
+    const hashedPassword = await hashPassword(password)
+
     //save user
-    const user = await userModel({name,email,password}).save();
+    const user = await userModel({name,email,password:hashedPassword}).save();
 
     res.status(201).send({
         success:true,
