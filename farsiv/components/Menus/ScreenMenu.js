@@ -6,6 +6,9 @@ import Register from '../../screens/auth/Register';
 import Login from '../../screens/auth/Login';
 import { AuthContext } from '../../context/authContext';
 import HeaderMenu from './HeaderMenu';
+import Post from '../../screens/Post';
+import About from '../../screens/About';
+import Account from '../../screens/Account';
 const ScreenMenu = () => {
 
     //global state
@@ -22,10 +25,35 @@ const authenticatedUser = state?.user && state?.token
             options={{title:"Full Stack App",
             headerRight : () =>  <HeaderMenu/>,
         }}
-            /></>
+        />
+          <Stack.Screen 
+            name="Post"
+            component={Post} 
+            options={{
+                headerBackTitle:'Back',
+                headerRight : () =>  <HeaderMenu/>,
+            }}
+          /> 
+           <Stack.Screen 
+            name="About"
+            component={About} 
+            options={{
+                headerBackTitle:'Back',
+                headerRight : () =>  <HeaderMenu/>,
+            }}
+          /> 
+           <Stack.Screen 
+            name="Account"
+            component={Account} 
+            options={{
+                headerBackTitle:'Back',
+                headerRight : () =>  <HeaderMenu/>,
+            }}
+          /> 
+            </>
         ) :   (
                 <>
-                <Stack.Screen 
+            <Stack.Screen 
             name="Register"
              component={Register} 
              options={{headerShown:false}}
@@ -35,7 +63,8 @@ const authenticatedUser = state?.user && state?.token
             component={Login}
              options={{headerShown:false}}
              />
-                </>
+             
+            </>
             )}
             
             
