@@ -28,7 +28,11 @@ const Login = ({ navigation }) => {
       alert(data && data.message);
       navigation.navigate("Home");
       console.log("Login Data ==>", { email, password });
-    } catch (error) {}
+    } catch (error) {
+      alert(error.response.data.message);
+      setLoading(fasle);
+      console.log(error);
+    }
   };
   //temp funct,on to check local storage data
   const getLocalStorageData = async () => {
