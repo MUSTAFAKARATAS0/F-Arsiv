@@ -2,37 +2,38 @@ import React, { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-//context
+// AuthContext oluşturma
 const AuthContext = createContext();
 
-//provider
+// AuthProvider
 const AuthProvider = ({ children }) => {
-  //Global State
   const [state, setState] = useState({
-    user: null,
-    token: "",
+    user: null, // Kullanıcı bilgileri
+    token: "", // Kimlik doğrulama token'ı
   });
 
-  //inital local storage data
+  // Yerel depolama verilerini yükleme
   useEffect(() => {
-    const loadLocalStorageData = async () => {
-      let data = await AsyncStorage.getItem("@auth");
-      let loginData = JSON.parse(data);
-      setState({ ...state, user: loginData?.user, token: loginData?.token });
+    const loadAuthData = async () => {
+      const data = await AsyncStorage.getItem("@auth"); // Yerel depolamadan veriyi çek
+      if (data) {
+        const parsedData = JSON.parse(data); // JSON formatını çöz
+        setState({ user: parsedData?.user, token: parsedData?.token }); // Küresel durumu güncelle
+      }
     };
 
-    loadLocalStorageData();
+    loadAuthData();
   }, []);
 
-  let token = state && state.token;
-
-  //default axios setting
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  axios.defaults.baseURL = "http://192.168.88.220:8080/api/v1";
+  // Axios varsayılan ayarları
+  if (state.token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${state.token}`; // Kimlik doğrulama başlığı
+  }
+  axios.defaults.baseURL = "http://localhost:8080/api/v1"; // API'nin temel URL'si
 
   return (
     <AuthContext.Provider value={[state, setState]}>
-      {children}
+      {children} // Sağlayıcıya geçirilen çocuk bileşenleri
     </AuthContext.Provider>
   );
 };

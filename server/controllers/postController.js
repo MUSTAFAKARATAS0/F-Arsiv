@@ -1,35 +1,39 @@
-const postModel = require("../models/postModel");
+const filmModel = require("../models/postModel");
 
-//create post
-const createPostController = async (req, res) => {
+// Film Oluşturma Kontrolcüsü
+const createFilmController = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    //validate
-    if (!title || !description) {
-      return res.status(500).send({
+    const { title, description, director, releaseDate } = req.body;
+
+    // Girdi doğrulama
+    if (!title || !description || !director || !releaseDate) {
+      return res.status(400).send({
         success: false,
-        message: "please provide all fields",
+        message: "Please provide all required fields",
       });
     }
-    const post = await postModel({
+
+    // Yeni Film Oluşturma
+    const film = await filmModel({
       title,
       description,
-      postedBy: req.auth._id,
+      director,
+      releaseDate,
     }).save();
+
     res.status(201).send({
       success: true,
-      message: "post created successfully",
-      post,
+      message: "Film created successfully",
+      film,
     });
-    console.log(req);
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "error in create post api",
+      message: "Error creating film",
       error,
     });
   }
 };
 
-module.exports = { createPostController };
+module.exports = { createFilmController };

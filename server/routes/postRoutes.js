@@ -1,11 +1,12 @@
 const express = require("express");
-const { requireSignIn } = require("../controllers/userController");
-const { createPostController } = require("../controllers/postController");
+const { createFilmController } = require("../controllers/postController");
+const { requireSignIn } = require("../controllers/userController"); // Kimlik doğrulama için varsayılan orta katman
 
-//router object
+// Router nesnesi
 const router = express.Router();
 
-// CREATE POST || POST
-router.post("/create-post", requireSignIn, createPostController);
-//export
+// Yeni Film Oluşturma || POST
+router.post("/create-film", requireSignIn, createFilmController);
+
+// Modülü dışa aktarma
 module.exports = router;

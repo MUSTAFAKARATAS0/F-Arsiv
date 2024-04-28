@@ -1,23 +1,27 @@
 const mongoose = require("mongoose");
 
-//schema
-const postSchema = new mongoose.Schema(
+// Film Şeması
+const filmSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "please add post title"],
+      required: [true, "Please add film title"],
     },
     description: {
       type: String,
-      required: [true, "please add post description"],
+      required: [true, "Please add film description"],
     },
-    postedBy: {
-      type: mongoose.Schema.ObjectId,
-      ref: "user",
-      required: true,
+    director: {
+      type: String,
+      required: [true, "Please add director name"],
+    },
+    releaseDate: {
+      type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true } // createdAt ve updatedAt alanlarını otomatik olarak ekler
 );
 
-module.exports = mongoose.model("Post", postSchema);
+const filmModel = mongoose.model("Film", filmSchema);
+
+module.exports = filmModel;

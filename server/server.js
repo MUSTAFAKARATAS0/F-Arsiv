@@ -5,28 +5,28 @@ const colors = require("colors");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 
-//DOTENV
+// Çevresel Değişkenleri Yükleme
 dotenv.config();
 
-//MONGODB CONNECTİON
-connectDB();
+// MongoDB Bağlantısı
+connectDB(); // MongoDB bağlantısını sağlar
 
-//REST OBJECT
+// REST Nesnesi
 const app = express();
 
-//middlewares
-app.use(cors());
-app.use(express.json());
-app.use(morgan("dev"));
+// Orta Katmanlar
+app.use(cors()); // CORS izinlerini ayarlar
+app.use(express.json()); // JSON işleyiciyi etkinleştirir
+app.use(morgan("dev")); // HTTP isteklerini loglar
 
-//ROUTES
-app.use("/api/v1/auth", require("./routes/userRoutes"));
-app.use("/api/v1/post", require("./routes/postRoutes"));
+// Rotalar
+app.use("/api/v1/auth", require("./routes/userRoutes")); // Kullanıcı kimlik doğrulama
+app.use("/api/v1/post", require("./routes/postRoutes")); // Film ile ilgili rotalar
 
-//PORT
+// PORT Ayarlama
 const PORT = process.env.PORT || 8080;
 
-//LİSTEN
+// Sunucu Başlatma
 app.listen(PORT, () => {
-  console.log(`server running ${PORT} `.bgGreen.white);
+  console.log(`Server running on port ${PORT}`.bgGreen.white);
 });
