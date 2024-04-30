@@ -1,39 +1,52 @@
-const filmModel = require("../models/postModel");
-
-// Film Oluşturma Kontrolcüsü
-const createFilmController = async (req, res) => {
+const registerController = async (req, res) => {
   try {
-    const { title, description, director, releaseDate } = req.body;
+    const { name, email, password } = req.body;
 
-    // Girdi doğrulama
-    if (!title || !description || !director || !releaseDate) {
+    if (!name) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Name is required" });
+    }
+
+    if (!email) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Email is required" });
+    }
+
+    if (!password || password.length < 6) {
       return res.status(400).send({
         success: false,
-        message: "Please provide all required fields",
+        message: "Password is required and must be at least 6 characters long",
       });
     }
 
-    // Yeni Film Oluşturma
-    const film = await filmModel({
-      title,
-      description,
-      director,
-      releaseDate,
-    }).save();
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(500).send({
+        success: false,
+        message: "User already registered with this email",
+      });
+    }
+
+    const hashedPassword = await hashPassword(password); // Şifreyi hash'le
+
+    const user = await new userModel({
+      name,
+      email,
+      password: hashedPassword,
+    }).save(); // Kullanıcıyı kaydet
 
     res.status(201).send({
       success: true,
-      message: "Film created successfully",
-      film,
+      message: "Registration successful, please log in",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
+    console.error("Error during registration:", error);
+    return res.status(500).send({
       success: false,
-      message: "Error creating film",
+      message: "Error in register API",
       error,
     });
   }
 };
-
-module.exports = { createFilmController };

@@ -5,13 +5,9 @@ import ScreenMenu from "./components/Menus/ScreenMenu";
 
 const RootNavigation = () => {
   return (
-    <Text>
-      <AuthProvider>
-        <Text>
-          <ScreenMenu />
-        </Text>
-      </AuthProvider>
-    </Text>
+    <AuthProvider>
+      <ScreenMenu />
+    </AuthProvider>
   );
 };
 

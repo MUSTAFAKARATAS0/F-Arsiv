@@ -1,21 +1,36 @@
 const mongoose = require("mongoose");
-
+//FilmID;Title;ReleaseDate;Review;DirectorID;StudioID;GenreID;RunTimeMinutes;OscarWins
 // Film Şeması
 const filmSchema = new mongoose.Schema(
   {
-    title: {
+    FilmID: {
       type: String,
       required: [true, "Please add film title"],
     },
-    description: {
+    Title: {
       type: String,
       required: [true, "Please add film description"],
     },
-    director: {
+    Review: {
+      type: String,
+    },
+    ReleaseDate: {
       type: String,
       required: [true, "Please add director name"],
     },
-    releaseDate: {
+    DirectorID: {
+      type: Date,
+    },
+    StudioID: {
+      type: Date,
+    },
+    GenreID: {
+      type: Date,
+    },
+    RunTimeMinutes: {
+      type: Date,
+    },
+    OscarWins: {
       type: Date,
     },
   },

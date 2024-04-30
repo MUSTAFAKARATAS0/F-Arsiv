@@ -1,42 +1,42 @@
+import React, { useEffect, useContext, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
-import React, { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/authContext"; // AuthContext'i içe aktar
-import FooterMenu from "../components/Menus/FooterMenu";
 
 const Home = () => {
-  const [films, setFilms] = useState([]); // Film verilerini saklamak için dizi
+  const [films, setFilms] = useState([]); // Film verilerini saklamak için
   const [loading, setLoading] = useState(true); // Yükleme durumunu izlemek için
   const [state] = useContext(AuthContext); // AuthContext'ten kullanıcı durumunu al
 
-  // Film verilerini çekme
   useEffect(() => {
     const fetchFilms = async () => {
       try {
-        const { data } = await axios.get("/film/get-films"); // API rotasından veri çek
-        setFilms(data.films); // Verileri duruma kaydet
-        setLoading(false); // Yükleme tamamlandı
+        const response = await axios.get("/film/get-films");
+        setFilms(response.data.films); // Verileri duruma kaydet
       } catch (error) {
         console.error("Error fetching films:", error);
-        setLoading(false); // Yükleme hatası
+        Alert.alert("Error", "Unable to fetch films"); // Hata yönetimi
+      } finally {
+        setLoading(false); // Yükleme tamamlandı
       }
     };
 
-    fetchFilms(); // Verileri çek
-  }, []); // Bileşen yüklendiğinde çalışır
+    fetchFilms(); // Bileşen yüklendiğinde verileri çek
+  }, []); // Bağımlılık olmadan çalışır
 
   if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
-    ); // Yükleme devam ediyorsa gösterilecek
+    ); // Yükleme devam ediyorsa
   }
 
   return (
@@ -55,7 +55,6 @@ const Home = () => {
           <Text>No films found.</Text> // Veri yoksa
         )}
       </ScrollView>
-      <FooterMenu /> // Alt menüyü ekler
     </View>
   );
 };
@@ -63,9 +62,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
-    marginTop: 40,
-    justifyContent: "space-between",
+    padding: 10,
+    justifyContent: "center",
   },
   filmContainer: {
     padding: 10,

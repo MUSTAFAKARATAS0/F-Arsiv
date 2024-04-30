@@ -6,18 +6,16 @@ const {
   requireSignIn,
 } = require("../controllers/userController");
 
-//riouter object
 const router = express.Router();
 
-// routes
-//REGISTER || POST
+// Kullanıcı kayıt rotası (POST)
 router.post("/register", registerController);
 
-//LOGIN || POST
+// Kullanıcı giriş rotası (POST)
 router.post("/login", loginController);
 
-//UPDATE || PUT
+// Kullanıcı güncelleme rotası (PUT)
 router.put("/update-user", requireSignIn, updateUserController);
 
-//export
+// Router'ı dışa aktarın
 module.exports = router;
