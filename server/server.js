@@ -4,19 +4,35 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const User = require("../server/models/userModel");
+const connectDB = require("./config/db");
+const Film = require("../server/models/filmModel");
+
 dotenv.config();
 
-// Express uygulamasını başlat
-const app = express();
+const app = express(); // Express uygulamasını başlat
 
-const connectDB = require("../server/config/db");
 connectDB();
-
-// Express'e JSON desteği ekleyin
 app.use(bodyParser.json());
 
-// CRUD işlemleri için rotaları tanımlayın
-
+app.get("/film", async (req, res) => {
+  try {
+    const films = await Film.find(); // Tüm kullanıcıları getir
+    res.status(200).send(films); // Kullanıcı listesini döndür
+  } catch (error) {
+    console.error("Filmleri getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
+  }
+});
+// Tüm kullanıcıları alma (Read)
+app.get("/users", async (req, res) => {
+  try {
+    const users = await User.find(); // Tüm kullanıcıları getir
+    res.status(200).send(users); // Kullanıcı listesini döndür
+  } catch (error) {
+    console.error("Kullanıcıları getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
+  }
+});
 // Kullanıcı oluşturma (Create)
 app.post("/users", async (req, res) => {
   try {
@@ -29,16 +45,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
-// Tüm kullanıcıları alma (Read)
-app.get("/users", async (req, res) => {
-  try {
-    const users = await User.find(); // Tüm kullanıcıları getir
-    res.status(200).send(users); // Kullanıcı listesini döndür
-  } catch (error) {
-    console.error("Kullanıcıları getirme hatası:", error);
-    res.status(500).send({ error: error.message }); // Hata mesajını döndür
-  }
-});
+// "/films" rotası altında film rotalarını kullan
 
 // Belirli bir kullanıcıyı alma (Read by ID)
 app.get("/users/:id", async (req, res) => {
