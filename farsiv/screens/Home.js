@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFilms = async () => {
       try {
-        const response = await axios.get("/Film"); // Doğru rota
+        const response = await axios.get("/film"); // Doğru rota
         setFilms(response.data); // Verileri duruma kaydet
       } catch (error) {
         console.error("Error fetching films:", error);

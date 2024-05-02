@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const User = require("../server/models/userModel");
 const connectDB = require("./config/db");
 const Film = require("../server/models/filmModel");
+const filmRoutes = require("./routes/filmRoutes");
 
 dotenv.config();
 
@@ -14,15 +15,8 @@ const app = express(); // Express uygulamasını başlat
 connectDB();
 app.use(bodyParser.json());
 
-app.get("/film", async (req, res) => {
-  try {
-    const films = await Film.find(); // Tüm kullanıcıları getir
-    res.status(200).send(films); // Kullanıcı listesini döndür
-  } catch (error) {
-    console.error("Filmleri getirme hatası:", error);
-    res.status(500).send({ error: error.message }); // Hata mesajını döndür
-  }
-});
+app.use("/films", filmRoutes);
+
 // Tüm kullanıcıları alma (Read)
 app.get("/users", async (req, res) => {
   try {

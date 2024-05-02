@@ -2,9 +2,6 @@ const mongoose = require("mongoose");
 
 const filmSchema = new mongoose.Schema(
   {
-    _id: {
-      type: mongoose.Types.ObjectId,
-    },
     FilmID: {
       type: String,
       required: true,
@@ -49,4 +46,4 @@ const filmSchema = new mongoose.Schema(
 
 // Film Modeli
 
-module.exports = mongoose.model("Films", filmSchema);
+module.exports = mongoose.model("films", filmSchema);

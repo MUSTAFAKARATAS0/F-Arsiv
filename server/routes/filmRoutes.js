@@ -1,8 +1,9 @@
 const express = require("express");
+const Film = require("../models/filmModel");
 
 const router = express.Router();
 
-/*router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const films = await Film.find(); // İlk 10 filmi getir // Film modelini kullanarak veritabanından tüm filmleri al
     console.log(Film);
