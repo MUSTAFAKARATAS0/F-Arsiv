@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const User = require("../server/models/userModel");
 const connectDB = require("./config/db");
-const Film = require("../server/models/filmModel");
 const filmRoutes = require("./routes/filmRoutes");
+const directorRoutes = require("./routes/directorRoutes");
 
 dotenv.config();
 
@@ -16,6 +16,8 @@ connectDB();
 app.use(bodyParser.json());
 
 app.use("/films", filmRoutes);
+
+app.use("/directors", directorRoutes);
 
 // Tüm kullanıcıları alma (Read)
 app.get("/users", async (req, res) => {

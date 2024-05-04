@@ -13,15 +13,17 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-/* router.post("/add", async (req, res) => {
+router.get("/get/:id", async (req, res) => {
   try {
-    const film = await Films.add(req.body); // Film modelini kullanarak veritabanından tüm filmleri al
-    res.status(200).json(film); // Yanıt olarak JSON olarak filmleri döndür
+    const film = await Film.find({ FilmID: req.params.id }); // ID'ye göre kullanıcıyı bul
+    if (!film) {
+      return res.status(404).send({ error: "Film bulunamadı" });
+    }
+    res.status(200).send(film); // Kullanıcıyı döndür
   } catch (error) {
-    console.error("Filmleri getirme hatası:", error);
-    res.status(500).json({ error: error.message });
+    console.error("Filmi getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
   }
-}); */
+});
 
 module.exports = router; // Rota modülünü dışa aktar
