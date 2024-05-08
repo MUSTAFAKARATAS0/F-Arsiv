@@ -7,6 +7,9 @@ const User = require("../server/models/userModel");
 const connectDB = require("./config/db");
 const filmRoutes = require("./routes/filmRoutes");
 const directorRoutes = require("./routes/directorRoutes");
+const actorRoutes = require("./routes/actorRoutes");
+const genreRoutes = require("./routes/genreRoutes");
+const studioRoutes = require("./routes/studioRoutes");
 
 dotenv.config();
 
@@ -19,6 +22,11 @@ app.use("/films", filmRoutes);
 
 app.use("/directors", directorRoutes);
 
+app.use("/actors", actorRoutes);
+
+app.use("/genres", genreRoutes);
+
+app.use("/studios", studioRoutes);
 // Tüm kullanıcıları alma (Read)
 app.get("/users", async (req, res) => {
   try {

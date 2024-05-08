@@ -30,9 +30,9 @@ const directorSchema = new mongoose.Schema({
   },
   Gender: {
     type: String,
-    enum: ["Male", "Female", "Non-binary", "Other"], // Ensures valid values
+    enum: ["Male", "Female", "Other"], // Ensures valid values
     required: true,
   },
 });
 
-module.exports = mongoose.model("director", directorSchema);
+module.exports = mongoose.model("directors", directorSchema);
