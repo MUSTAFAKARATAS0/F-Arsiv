@@ -1,164 +1,177 @@
 const JWT = require("jsonwebtoken");
-const { hash } = require("bcrypt");
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const userModel = require("../models/userModel");
-var { expressjwt: jwt } = require("express-jwt");
+const { expressjwt: jwt } = require("express-jwt");
+const dotenv = require("dotenv");
+dotenv.config();
 
-//middleware
+// Middleware
 const requireSignIn = jwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
 });
 
-//register
+// Kullanıcı kaydı
 const registerController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    //validation
-    if (!name) {
+
+    // Geçerlilik kontrolleri
+    if (!name || !email || !password) {
       return res.status(400).send({
         success: false,
-        message: "name is required",
+        message: "Name, Email ve Password gereklidir",
       });
     }
-    if (!email) {
+
+    if (password.length < 6) {
       return res.status(400).send({
         success: false,
-        message: "email is required",
+        message: "Şifre en az 6 karakter uzunluğunda olmalıdır",
       });
     }
-    if (!password || password.length < 6) {
+
+    // Var olan kullanıcıyı kontrol et
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
       return res.status(400).send({
         success: false,
-        message: "password is required 6 character long",
+        message: "Bu email ile zaten kayıtlı kullanıcı var",
       });
     }
-    //exisiting user
-    const exisitingUser = await userModel.findOne({ email });
-    if (exisitingUser) {
-      return res.status(500).send({
-        success: false,
-        message: "user alredy register with this email",
-      });
-    }
-    //hashed password
+
+    // Şifreyi hashle
     const hashedPassword = await hashPassword(password);
 
-    //save user
-    const user = await userModel({
+    // Yeni kullanıcıyı kaydet
+    const user = new userModel({
       name,
       email,
       password: hashedPassword,
-    }).save();
+    });
+
+    await user.save();
 
     res.status(201).send({
       success: true,
-      message: "registeration successfull please login",
+      message: "Kayıt başarılı",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Kayıt hatası:", error);
     return res.status(500).send({
       success: false,
-      message: "error in register api",
-      error,
+      message: "Kayıt API'sinde hata",
     });
   }
 };
 
-//login
+// Kullanıcı giriş
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    //validation
+
     if (!email || !password) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
-        message: "please provide email or password",
-      });
-    }
-    //find user
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      return res.status(500).send({
-        success: false,
-        message: "user not found",
-      });
-    }
-    //match password
-    const match = await comparePassword(password, user.password);
-    if (!match) {
-      return res.status(500).send({
-        success: false,
-        message: "invalid username or password",
+        message: "Email ve Şifre gereklidir",
       });
     }
 
-    //TOKEN JWT
-    const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Kullanıcı bulunamadı",
+      });
+    }
+
+    // Şifreyi karşılaştır
+    const match = await comparePassword(password, user.password);
+
+    if (!match) {
+      return res.status(400).send({
+        success: false,
+        message: "Geçersiz şifre",
+      });
+    }
+
+    // JWT oluştur
+    const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    //undeinfed password
-    user.password = undefined;
     res.status(200).send({
       success: true,
-      message: "login successfully",
-      token,
+      message: "Başarıyla giriş yapıldı",
+
       user,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Giriş API'sinde hata:", error);
     return res.status(500).send({
       success: false,
-      message: "error in login api",
-      error,
+      message: "Giriş API'sinde hata",
     });
   }
 };
-
-//update user
+/*  --KULLANICI GÜNCELLEME--
 const updateUserController = async (req, res) => {
   try {
     const { name, password, email } = req.body;
-    //user find
+
+    // Var olan kullanıcıyı bul
     const user = await userModel.findOne({ email });
-    //password vaildate
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Kullanıcı bulunamadı",
+      });
+    }
+
     if (password && password.length < 6) {
       return res.status(400).send({
         success: false,
-        message: "Password is required and should be 6 character long",
+        message: "Şifre en az 6 karakter olmalıdır",
       });
     }
-    const hashedPassword = password ? await hashPassword(password) : undefined;
 
-    //updated user
+    // Yeni şifre varsa hashle
+    const hashedPassword = password
+      ? await hashPassword(password)
+      : user.password;
+
+    // Kullanıcıyı güncelle
     const updatedUser = await userModel.findOneAndUpdate(
       { email },
       {
         name: name || user.name,
-        password: hashedPassword || user.password,
+        password: hashedPassword,
       },
       { new: true }
     );
-    updatedUser.password = undefined;
+
+    updatedUser.password = undefined; // Şifreyi yanıt içinde göstermeyin
+
     res.status(200).send({
       success: true,
-      message: "Profile updated please login",
+      message: "Profil başarıyla güncellendi",
       updatedUser,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Kullanıcı güncelleme hatası:", error);
     res.status(500).send({
       success: false,
-      message: "Error In User Update Api",
+      message: "Kullanıcı güncelleme API'sinde hata",
       error,
     });
   }
 };
-
+*/
 module.exports = {
   registerController,
   loginController,
-  updateUserController,
+  //updateUserController
   requireSignIn,
 };

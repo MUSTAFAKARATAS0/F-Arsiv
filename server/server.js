@@ -10,6 +10,7 @@ const directorRoutes = require("./routes/directorRoutes");
 const actorRoutes = require("./routes/actorRoutes");
 const genreRoutes = require("./routes/genreRoutes");
 const studioRoutes = require("./routes/studioRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ app.use("/directors", directorRoutes);
 app.use("/actors", actorRoutes);
 
 app.use("/genres", genreRoutes);
+
+app.use("/user", userRoutes);
 
 app.use("/studios", studioRoutes);
 // Tüm kullanıcıları alma (Read)
