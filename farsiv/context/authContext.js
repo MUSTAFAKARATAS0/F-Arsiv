@@ -34,7 +34,7 @@ const AuthProvider = ({ children }) => {
     } else {
       delete axios.defaults.headers.common["Authorization"];
     }
-    axios.defaults.baseURL = "http://localhost:8080"; // Temel URL'yi ayarla
+    axios.defaults.baseURL = "http://10.2.28.137"; // Temel URL'yi ayarla
   }, [state.token]); // Token değiştiğinde tekrar çalıştır
 
   return (

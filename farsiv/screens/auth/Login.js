@@ -5,7 +5,6 @@ import InputBox from "../../components/Forms/InputBox";
 import SubmitButton from "../../components/Forms/SubmitButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
 const Login = ({ navigation }) => {
   //global state
   const [state, setState] = useContext(AuthContext);
@@ -17,23 +16,36 @@ const Login = ({ navigation }) => {
     try {
       setLoading(true);
       if (!email || !password) {
-        Alert.alert("please fill all fields");
+        Alert.alert("Please fill all fields");
         setLoading(false);
         return;
       }
+
       setLoading(false);
-      const { data } = await axios.post("/auth/login", { email, password });
-      setState(data);
-      await AsyncStorage.setItem("@auth", JSON.stringify(data));
-      alert(data && data.message);
-      navigation.navigate("Home");
-      console.log("Login Data ==>", { email, password });
+      const response = await axios.post("http://10.2.28.137:8080/user/login", {
+        email,
+        password,
+      });
+
+      if (response && response.data) {
+        setState(response.data);
+        await AsyncStorage.setItem("@auth", JSON.stringify(response.data));
+        navigation.navigate("Home");
+        console.log("Login Data ==>", { email, password });
+      } else {
+        throw new Error("Invalid response format");
+      }
     } catch (error) {
-      alert(error.response.data.message);
-      setLoading(fasle);
+      if (error.response && error.response.data) {
+        alert(error.response.data.message);
+      } else {
+        alert("An error occurred: " + error.message);
+      }
+      setLoading(false);
       console.log(error);
     }
   };
+
   //temp funct,on to check local storage data
   const getLocalStorageData = async () => {
     let data = await AsyncStorage.getItem("@auth");
