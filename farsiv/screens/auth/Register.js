@@ -20,7 +20,7 @@ const Register = ({ navigation }) => {
       }
 
       setLoading(false);
-      const response = await axios.post("http://10.2.28.137/auth/register", {
+      const response = await axios.post("http://192.168.0.220/auth/register", {
         name,
         email,
         password,

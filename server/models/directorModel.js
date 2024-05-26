@@ -6,7 +6,6 @@ const directorSchema = new mongoose.Schema({
   DirectorID: {
     type: String,
     required: true,
-    unique: true,
   },
   FirstName: {
     type: String,

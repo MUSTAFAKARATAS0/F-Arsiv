@@ -22,10 +22,13 @@ const Login = ({ navigation }) => {
       }
 
       setLoading(false);
-      const response = await axios.post("http://10.2.28.137:8080/user/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://10.196.89.238:8080/user/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response && response.data) {
         setState(response.data);

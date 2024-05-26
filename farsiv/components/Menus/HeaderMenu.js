@@ -1,21 +1,32 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native"; // react-navigation kullanarak navigasyon yönlendirmesi için
+import { useNavigation } from "@react-navigation/native";
 
 const HeaderMenu = () => {
   const [stack, setState] = useContext(AuthContext);
-  const navigation = useNavigation(); // Navigation hook'unu kullanarak navigasyonu al
+  const navigation = useNavigation();
 
   //logout
   const hendleLogout = async () => {
     setState({ token: "", user: null });
     await AsyncStorage.removeItem("@auth");
     alert("logout successfully");
-    navigation.navigate("Login"); // Çıkış yapıldıktan sonra giriş ekranına yönlendirme yap
+    navigation.navigate("Login");
   };
+
+  useEffect(() => {
+    // Kullanıcı çıkış yaptıktan sonra giriş ekranındaki giriş bilgilerini temizle
+    return () => {
+      navigation.reset({
+        // Ekran geçmişini temizler
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    };
+  }, []); // Sadece bileşen ilk kez oluşturulduğunda çalışır
 
   return (
     <View>
@@ -31,11 +42,6 @@ const HeaderMenu = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    margin: 10,
-    justifyContent: "space-between",
-  },
   iconStyle: {
     marginBottom: 3,
     alignSelf: "center",
