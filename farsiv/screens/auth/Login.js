@@ -52,7 +52,6 @@ const Login = ({ navigation }) => {
   //temp funct,on to check local storage data
   const getLocalStorageData = async () => {
     let data = await AsyncStorage.getItem("@auth");
-    console.log(("Local storage ==>", data));
   };
   getLocalStorageData();
 
