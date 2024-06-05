@@ -27,4 +27,18 @@ router.get("/get/:id", async (req, res) => {
   }
 });
 
+router.get("/get/s/:StudioID", async (req, res) => {
+  const studioObjectId = req.params.id;
+  try {
+    const studio = await Studio.findOne({ StudioID: studioObjectId });
+    if (!studio) {
+      return res.status(404).send({ error: "Yönetmen bulunamadı" });
+    }
+    res.status(200).send(studio); // Kullanıcıyı döndür
+  } catch (error) {
+    console.error("Yönetmeni getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
+  }
+});
+
 module.exports = router;

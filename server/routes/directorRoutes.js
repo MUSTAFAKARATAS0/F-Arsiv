@@ -27,4 +27,17 @@ router.get("/get/:id", async (req, res) => {
   }
 });
 
+router.get("/get/d/:DirectorID", async (req, res) => {
+  const directorObjectId = req.params.id;
+  try {
+    const director = await Director.findOne({ DirectorID: directorObjectId });
+    if (!director) {
+      return res.status(404).send({ error: "Yönetmen bulunamadı" });
+    }
+    res.status(200).send(director); // Kullanıcıyı döndür
+  } catch (error) {
+    console.error("Yönetmeni getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
+  }
+});
 module.exports = router;

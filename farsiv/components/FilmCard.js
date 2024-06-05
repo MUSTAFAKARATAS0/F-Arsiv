@@ -6,12 +6,13 @@ const FilmCard = ({ film }) => {
     <View style={styles.container}>
       <Text style={styles.filmTitle}>{film.Title}</Text>
       <Text style={styles.review}>Review: {film.Review}</Text>
-      <Text style={styles.director}>Directed by: {film.DirectorID}</Text>
+      <Text style={styles.director}>Directed by: {film.DirectorFullName}</Text>
+      <Text style={styles.studio}>Studio: {film.StudioName}</Text>
       <Text style={styles.date}>
         Release Date: {new Date(film.ReleaseDate).toDateString()}
       </Text>
       <Text style={styles.oscar}>Oscar Wins: {film.OscarWins}</Text>
-      <Text style={styles.genre}>Genre: {film.GenreID}</Text>
+      <Text style={styles.genre}>Genre: {film.GenreName}</Text>
     </View>
   );
 };
@@ -37,6 +38,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: "darkblue",
+  },
+  studio: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "brown",
   },
   date: {
     fontSize: 16,

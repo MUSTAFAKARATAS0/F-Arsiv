@@ -27,4 +27,18 @@ router.get("/get/:id", async (req, res) => {
   }
 });
 
+router.get("/get/g/:GenreID", async (req, res) => {
+  const genreObjectId = req.params.id;
+  try {
+    const genre = await Genre.findOne({ GenreID: genreObjectId });
+    if (!genre) {
+      return res.status(404).send({ error: "Yönetmen bulunamadı" });
+    }
+    res.status(200).send(genre); // Kullanıcıyı döndür
+  } catch (error) {
+    console.error("Yönetmeni getirme hatası:", error);
+    res.status(500).send({ error: error.message }); // Hata mesajını döndür
+  }
+});
+
 module.exports = router;
