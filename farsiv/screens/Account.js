@@ -1,44 +1,64 @@
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
   TextInput,
-  Touchable,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import FooterMenu from "../components/Menus/FooterMenu";
-import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+
 const Account = () => {
-  //global state
   const [state, setState] = useContext(AuthContext);
-  const { user, token } = state;
-  // local state
-  const [name, setName] = useState(user?.name);
-  const [password, setPassword] = useState(user?.password);
-  const [email, setEmail] = useState(user?.email);
+  const { user } = state;
+
+  const [name, setName] = useState(user.name);
+  const [password, setPassword] = useState(user.password);
+  const [email] = useState(user.email); // email değiştirilemeyecek şekilde olduğu için sadece state içinde tutuluyor
   const [loading, setLoading] = useState(false);
 
-  //handle update user data
+  const navigation = useNavigation(); // Navigation hook'unu her renderda al
+
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.put("/auth/update-user", {
-        name,
-        password,
-        email,
-      });
+      const response = await axios.post(
+        `http://192.168.8.220:8080/users/update`,
+        {
+          name,
+          password,
+          email,
+        }
+      );
       setLoading(false);
-      let UD = JSON.stringify(data);
-      setState({ ...state, user: UD?.updatedUser });
-      alert(data && data.message);
+
+      const data = response.data;
+
+      if (!data) {
+        // Sunucudan gelen hata varsa
+        alert("Hata");
+      } else {
+        // Güncelleme başarılıysa
+        setState({ ...state, user: data });
+        alert("Başarılı");
+        navigation.navigate("Login"); // Login ekranına yönlendir
+      }
     } catch (error) {
-      alert(error.response.data.message);
+      // Axios hata durumu
+      if (error.response && error.response.data && error.response.data.error) {
+        // Sunucudan gelen hata varsa
+        alert(error.response.data.error);
+      } else {
+        // Diğer hatalar
+        alert("Bir hata oluştu, lütfen tekrar deneyin.");
+      }
       setLoading(false);
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -81,7 +101,7 @@ const Account = () => {
           <Text style={styles.inputText}>Role</Text>
           <TextInput
             style={styles.inputBox}
-            value={state?.user.role}
+            value={state.user.role}
             editable={false}
           />
         </View>
@@ -100,6 +120,7 @@ const Account = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -69,12 +69,18 @@ app.get("/users/:id", async (req, res) => {
 });
 
 // Kullanıcı güncelleme (Update)
-app.put("/users/:id", async (req, res) => {
+app.post("/users/update", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true, // Güncelleme sırasında şema doğrulaması yap
-    });
+    console.log("aaaa");
+    const user = await User.findOneAndUpdate(
+      { email: req.body.email },
+      req.body,
+      {
+        new: true,
+        runValidators: true, // Güncelleme sırasında şema doğrulaması yap
+      }
+    );
+    console.log(user);
     if (!user) {
       return res.status(404).send({ error: "Kullanıcı bulunamadı" });
     }

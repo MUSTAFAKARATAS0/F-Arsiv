@@ -101,6 +101,11 @@ const loginController = async (req, res) => {
       expiresIn: "7d",
     });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    }); // 7 gün
+
     res.status(200).send({
       success: true,
       message: "Başarıyla giriş yapıldı",

@@ -21,7 +21,7 @@ const Register = ({ navigation }) => {
 
       setLoading(false);
       const response = await axios.post(
-        "http://192.168.0.220:8080/user/register",
+        "http://192.168.8.220:8080/user/register",
         {
           name,
           email,

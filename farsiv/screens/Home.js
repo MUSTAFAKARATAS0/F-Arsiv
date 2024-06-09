@@ -25,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDirectors = async () => {
       try {
-        const response = await axios.get("http://192.168.0.220:8080/directors");
+        const response = await axios.get("http://192.168.8.220:8080/directors");
         setDirectors(response.data);
       } catch (error) {
         console.error("Error fetching directors:", error);
@@ -40,7 +40,7 @@ const Home = () => {
     const fetchFilms = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.0.220:8080/films?page=${currentPage}&pageSize=${PAGE_SIZE}`
+          `http://192.168.8.220:8080/films?page=${currentPage}&pageSize=${PAGE_SIZE}`
         );
         const filmsWithDirectors = response.data.map((film) => {
           const director = directors.find(
